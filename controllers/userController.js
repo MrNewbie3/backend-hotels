@@ -35,7 +35,7 @@ async function createUser(req, res) {
     return res.status(400).json({ sucess: false, message: "user already exist", data: { nama_user, email, role } });
   }
   const createUser = await prisma.user.create({
-    data: { email, nama_user, role, password: encrypted, foto: req.files[0].destination + req.files[0].originalname },
+    data: { email, nama_user, role, password: encrypted, foto: req.files[0].destination + req.files[0].filename },
   });
   if (!createUser) {
     return res.status(400).json({ sucess: false, message: "cannot create user", data: { nama_user, email, role } });
@@ -61,7 +61,7 @@ async function updateUser(req, res) {
     },
     data: {
       nama_user: payload.nama_user ? payload.nama_user : user.nama_user,
-      foto: req.files ? req.files[0].destination + req.files[0].originalname : user.foto,
+      foto: req.files ? req.files[0].destination + req.files[0].filename : user.foto,
       email: payload.email ? payload.email : user.email,
       password: payload.password ? await bcrypt.hash(payload.password, salt) : user.password,
       role: payload.role ? payload.role : user.role,

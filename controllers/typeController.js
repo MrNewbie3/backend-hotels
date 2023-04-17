@@ -23,8 +23,8 @@ async function getTypeById(req, res) {
 }
 
 async function createType(req, res) {
-  const { nama_tipe_kamar, harga } = req.body;
-  const payload = req.body;
+  const files = req.files;
+  const { nama_tipe_kamar, harga, deskripsi } = req.body;
   const checkType = await prisma.Tipe_Kamar.findUnique({
     where: {
       nama_tipe_kamar,
@@ -37,7 +37,12 @@ async function createType(req, res) {
     return res.status(400).json({ success: false, message: "Price must be an integer" });
   }
   const createType = await prisma.Tipe_Kamar.create({
-    data: payload,
+    data: {
+      nama_tipe_kamar,
+      harga,
+      deskripsi,
+      foto: files[0].destination + files[0].filename,
+    },
   });
   if (!createType) {
     return res.status(400).json({ sucess: false, message: "Cannot create type", data: nama_tipe_kamar });
@@ -47,6 +52,7 @@ async function createType(req, res) {
 
 async function updateType(req, res) {
   const { id } = req.params;
+  const file = req.files;
   const { harga } = req.body;
   const payload = req.body;
   const getType = await prisma.Tipe_Kamar.findUnique({
@@ -58,20 +64,26 @@ async function updateType(req, res) {
   if (!getType) {
     return res.status(404).json({ success: false, message: "Data not found", data: [] });
   }
-  if (typeof harga !== "number") {
+  if (harga && typeof harga !== "number") {
     return res.status(400).json({ success: false, message: "Price must be an integer" });
   }
   const updateType = await prisma.Tipe_Kamar.update({
     where: {
       id: parseInt(id),
     },
-    data: payload,
+    data: {
+      nama_tipe_kamar: payload.nama_tipe_kamar ? payload.nama_tipe_kamar : getType.nama_tipe_kamar,
+      foto: file ? file[0].destination + file[0].filename : getType.foto,
+      deskripsi: payload.deskripsi ? payload.deskripsi : getType.deskripsi,
+      harga: payload.harga ? payload.harga : getType.harga,
+    },
   });
 
   if (!updateType) {
     return res.status(400).json({ success: false, message: "Failed to update data", data: [] });
   }
-  return res.status(200).json({ success: true, message: "Success update data", data: payload });
+  console.log(req.user  );
+  return res.status(200).json({ success: true, message: "Success update data", data: getType });
 }
 
 async function deleteType(req, res) {
