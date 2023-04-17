@@ -4,12 +4,12 @@ const router = express.Router();
 const multer = require("multer");
 const authorization = require("../middleware/auth");
 const forms = multer({ dest: "../assets/user/" });
-
-router.get("/", authorization, getUser);
-router.post("/", authorization, forms.array("foto"), createUser);
+const adminAuth = require("../middleware/roleAuth");
+router.get("/", authorization, adminAuth.adminAuth, getUser);
+router.post("/", authorization, adminAuth.adminAuth, forms.array("foto"), createUser);
 router.get("/:id", authorization, getUserById);
-router.put("/:id", authorization, forms.array("foto"), updateUser);
-router.delete("/:id", authorization, deleteUser);
+router.put("/:id", authorization, adminAuth.adminAuth, forms.array("foto"), updateUser);
+router.delete("/:id", authorization, adminAuth.adminAuth, deleteUser);
 // user login and signing in
 router.post("/login", login);
 router.post("/signin", signIn);
