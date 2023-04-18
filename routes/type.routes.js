@@ -5,7 +5,7 @@ const multer = require("multer");
 const adminAuth = require("../middleware/roleAuth");
 const authorization = require("../middleware/auth");
 const forms = multer({ dest: "../assets/type/" });
-router.get("/", authorization, adminAuth.adminAuth, getTypes);
+router.get("/", authorization, getTypes);
 router.post("/", authorization, adminAuth.adminAuth, forms.array("foto"), createType);
 router.get("/:id", authorization, adminAuth.adminAuth, getTypeById);
 router.put("/:id", authorization, adminAuth.adminAuth, forms.array("foto"), updateType);
