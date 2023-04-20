@@ -1,12 +1,13 @@
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient } = require('@prisma/client');
+
 const prisma = new PrismaClient();
 
 async function getTypes(req, res) {
   const getData = await prisma.Tipe_Kamar.findMany();
   if (!getData) {
-    return res.status(400).json({ success: false, message: "Cannot proceed request", data: [] });
+    return res.status(400).json({ success: false, message: 'Cannot proceed request', data: [] });
   }
-  return res.status(200).json({ success: true, message: "Success get all data", data: getData });
+  return res.status(200).json({ success: true, message: 'Success get all data', data: getData });
 }
 
 async function getTypeById(req, res) {
@@ -17,13 +18,13 @@ async function getTypeById(req, res) {
     },
   });
   if (!getType) {
-    return res.status(404).json({ success: false, message: "Data not found", data: [] });
+    return res.status(404).json({ success: false, message: 'Data not found', data: [] });
   }
-  return res.status(200).json({ success: true, message: "Success get single data", data: getType });
+  return res.status(200).json({ success: true, message: 'Success get single data', data: getType });
 }
 
 async function createType(req, res) {
-  const files = req.files;
+  const { files } = req;
   const { nama_tipe_kamar, harga, deskripsi } = req.body;
   const checkType = await prisma.Tipe_Kamar.findUnique({
     where: {
@@ -31,10 +32,10 @@ async function createType(req, res) {
     },
   });
   if (checkType) {
-    return res.status(400).json({ sucess: false, message: "Type already exist", data: nama_tipe_kamar });
+    return res.status(400).json({ sucess: false, message: 'Type already exist', data: nama_tipe_kamar });
   }
-  if (typeof harga !== "number") {
-    return res.status(400).json({ success: false, message: "Price must be an integer" });
+  if (typeof harga !== 'number') {
+    return res.status(400).json({ success: false, message: 'Price must be an integer' });
   }
   const createType = await prisma.Tipe_Kamar.create({
     data: {
@@ -45,9 +46,9 @@ async function createType(req, res) {
     },
   });
   if (!createType) {
-    return res.status(400).json({ sucess: false, message: "Cannot create type", data: nama_tipe_kamar });
+    return res.status(400).json({ sucess: false, message: 'Cannot create type', data: nama_tipe_kamar });
   }
-  return res.status(200).json({ sucess: true, message: "Success create new type", data: nama_tipe_kamar });
+  return res.status(200).json({ sucess: true, message: 'Success create new type', data: nama_tipe_kamar });
 }
 
 async function updateType(req, res) {
@@ -62,10 +63,10 @@ async function updateType(req, res) {
   });
 
   if (!getType) {
-    return res.status(404).json({ success: false, message: "Data not found", data: [] });
+    return res.status(404).json({ success: false, message: 'Data not found', data: [] });
   }
-  if (harga && typeof harga !== "number") {
-    return res.status(400).json({ success: false, message: "Price must be an integer" });
+  if (harga && typeof harga !== 'number') {
+    return res.status(400).json({ success: false, message: 'Price must be an integer' });
   }
   const updateType = await prisma.Tipe_Kamar.update({
     where: {
@@ -80,10 +81,10 @@ async function updateType(req, res) {
   });
 
   if (!updateType) {
-    return res.status(400).json({ success: false, message: "Failed to update data", data: [] });
+    return res.status(400).json({ success: false, message: 'Failed to update data', data: [] });
   }
-  console.log(req.user  );
-  return res.status(200).json({ success: true, message: "Success update data", data: getType });
+  console.log(req.user);
+  return res.status(200).json({ success: true, message: 'Success update data', data: getType });
 }
 
 async function deleteType(req, res) {
@@ -94,7 +95,7 @@ async function deleteType(req, res) {
     },
   });
   if (!getType) {
-    return res.status(404).json({ success: false, message: "Data not found", data: [] });
+    return res.status(404).json({ success: false, message: 'Data not found', data: [] });
   }
   const deleteType = await prisma.Tipe_Kamar.delete({
     where: {
@@ -102,9 +103,9 @@ async function deleteType(req, res) {
     },
   });
   if (!deleteType) {
-    return res.status(400).json({ success: false, message: "Failed to delete data", data: [] });
+    return res.status(400).json({ success: false, message: 'Failed to delete data', data: [] });
   }
-  return res.status(200).json({ success: true, message: "Success delete data", data: getType });
+  return res.status(200).json({ success: true, message: 'Success delete data', data: getType });
 }
 
 module.exports = {

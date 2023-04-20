@@ -1,9 +1,11 @@
 const express = require("express");
-const { getTypes, createType, getTypeById, updateType, deleteType } = require("../controllers/typeController");
-const router = express.Router();
 const multer = require("multer");
+const { getTypes, createType, getTypeById, updateType, deleteType } = require("../controllers/typeController");
+
+const router = express.Router();
 const adminAuth = require("../middleware/roleAuth");
 const authorization = require("../middleware/auth");
+
 const forms = multer({ dest: "../assets/type/" });
 router.get("/", authorization, getTypes);
 router.post("/", authorization, adminAuth.adminAuth, forms.array("foto"), createType);

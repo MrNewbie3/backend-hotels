@@ -1,5 +1,5 @@
 const authMiddleware = (role) => (req, res, next) => {
-  const user = req.user;
+  const { user } = req;
   if (user.role.toUpperCase() === role.toUpperCase()) {
     return next();
   }
@@ -7,6 +7,6 @@ const authMiddleware = (role) => (req, res, next) => {
 };
 
 module.exports = {
-  adminAuth: authMiddleware("ADMIN"),
-  receptionistAuth: authMiddleware("RECEPTIONIST"),
+  adminAuth: authMiddleware('ADMIN'),
+  receptionistAuth: authMiddleware('RECEPTIONIST'),
 };

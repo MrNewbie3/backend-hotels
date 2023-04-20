@@ -1,5 +1,6 @@
-const jwt = require("jsonwebtoken");
-const { PrismaClient } = require("@prisma/client");
+const jwt = require('jsonwebtoken');
+const { PrismaClient } = require('@prisma/client');
+
 const prisma = new PrismaClient();
 
 // verify user auth
@@ -7,9 +8,9 @@ const authorization = async (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
-    return res.status(401).json({ success: false, message: "Authorization token required", data: [] });
+    return res.status(401).json({ success: false, message: 'Authorization token required', data: [] });
   }
-  const token = authorization.split(" ")[1];
+  const token = authorization.split(' ')[1];
   try {
     const { _id } = jwt.verify(token, process.env.SECRET_KEY);
     req.user = await prisma.user.findUnique({
@@ -18,7 +19,7 @@ const authorization = async (req, res, next) => {
     next();
   } catch (error) {
     console.log(error);
-    res.status(401).json({ success: false, message: "request is not authorized", data: [] });
+    res.status(401).json({ success: false, message: 'request is not authorized', data: [] });
   }
 };
 
