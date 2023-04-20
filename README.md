@@ -66,7 +66,7 @@ Install my-project with npm
 #### Delete user
 
 ```http
-  Delete /api/user/:id
+  DELETE /api/user/:id
 ```
 
 | Parameter | Type     | Description                            |
